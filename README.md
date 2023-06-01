@@ -17,6 +17,7 @@ class ReferenceApplication(): Application() {
 // as a result of an error) and be able to process any receipts collected.
 class ReferenceDelegate(): RoverDelegate() {
     override fun roverDidFinish(sessionUUID: String,
+						    		  resultsGzip: ByteArray,
                                 error: String?,
                                 verboseError: String?) {
         if (error != null) {
@@ -42,7 +43,8 @@ class ReferenceDelegate(): RoverDelegate() {
 // filesDir and the packageName. The fragment manager is used to
 // display merchant login UI when required.
 Rover.configure(
-    "F44213BE-C6CF-4297-92B0-610D319602D5",
+    "MY_ROVER_LICENSE_KEY",
+    Rover.Environment.staging,
     "unknown",
     applicationContext, 
     supportFragmentManager) { merchants, error ->
@@ -59,6 +61,7 @@ val fromDate: Date = formatter.parse("01-01-2020") ?: Date()
 Rover.collect(
 	merchantId = MerchantId.gmail.rawValue,
 	fromDate = fromDate,
+	isEphemeral = false,
 	delegate = ReferenceDelegate())
 ```
 
