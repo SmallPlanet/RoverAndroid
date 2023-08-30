@@ -87,9 +87,10 @@ android {
 	}
 	
 	// Rover includes several native libraries. Android Studio will attempt to automatically
-	// strip these included .so files, mangling them to the point they will not longer work.
+	// strip these included .so files, mangling them to the point they will no longer work.
 	// These packaging options disable the stripping of these libraries.
 	packagingOptions {
+		pickFirst '**/libjsc.so'
 		pickFirst '**/libc++_shared.so'
 		doNotStrip "*/arm64-v8a/*.so"
 		doNotStrip "*/armeabi-v7a/*.so"
