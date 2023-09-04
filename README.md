@@ -15,6 +15,9 @@ class ReferenceApplication(): Application() {
 // To interact with a Rover collector you provide a RoverDelegate. A minimal
 // delegate would know when the collection is finished (either successfully or
 // as a result of an error) and be able to process any receipts collected.
+//
+// Note: Some delegate methods provide a callback. Collection will not continue
+// until the callback is made.
 class ReferenceDelegate(): RoverDelegate() {
     override fun roverDidFinish(sessionUUID: String,
 						    		  resultsGzip: ByteArray,
