@@ -101,7 +101,7 @@ android {
 }
 ```
 
-### Manual AAR (recommended)
+### Manual AAR
 
 To embed a specific version of Rover in your Android Studio project, download the Android Archive file from the releases directory ( https://github.com/SmallPlanet/RoverAndroid/tree/main/Releases ). Place the .aar file somewhere in your project directory and then
 add the following:
@@ -110,28 +110,6 @@ add the following:
 // Add the following dependency to your build.gradle. Make sure to update the path correctly to your downloaded .aar file.
 dependencies {
 	implementation files('./path/to/downloaded/RoverAndroid.aar')
-}
-```
-
-### Maven
-
-To include the latest version of Rover in your Android Studio project using Maven:
-
-
-```kotlin
-// Add the following repository to your settings.gradle:
-repositories {
-    maven {
-        url = "https://raw.githubusercontent.com/SmallPlanet/RoverAndroid/main/maven"
-    }
-}
-```
-
-```kotlin
-// Add the following dependency to your build.gradle. Make sure to check the
-// latest tag from https://github.com/SmallPlanet/RoverAndroid/tags:
-dependencies {
-    implementation 'com.smallplanet:rover:v0.0.28'
 }
 ```
 
