@@ -22,6 +22,7 @@ class ReferenceDelegate(): RoverDelegate() {
     override fun roverDidFinish(sessionUUID: String,
 						    		  resultsGzip: ByteArray,
                                 error: String?,
+                                userError: String?,
                                 verboseError: String?) {
         if (error != null) {
             Log.d("RoverDelegate", "[${sessionUUID}] finished with error: ${error}")
@@ -124,4 +125,4 @@ By default, debugging in Android Studio will break on (any?) signal. [This is a 
 - add ```process handle SIGUSR1 --pass true --stop false --notify true```
 
 
-Latest version: v0.2.51
+Latest version: v0.2.52
