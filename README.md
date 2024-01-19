@@ -16,7 +16,7 @@ class ReferenceApplication(): Application() {
 // delegate would know when the collection is finished (either successfully or
 // as a result of an error) and be able to process any receipts collected.
 //
-// Note: Some delegate methods provide a callback. Collection will not continue
+// IMPORTANT NOTE: Some delegate methods provide a callback. Collection will not continue
 // until the callback is made.
 class ReferenceDelegate(): RoverDelegate() {
     override fun roverDidFinish(sessionUUID: String,
@@ -32,6 +32,7 @@ class ReferenceDelegate(): RoverDelegate() {
     }
     override fun roverDidCollect(sessionUUID: String,
                                  receipts: MutableList<Receipt>) {
+        // Receipts will be passed to you in batches during the collection process
         Log.d("RoverDelegate", "[${sessionUUID}] captured ${receipts.size} receipts")
     }
 }
@@ -62,11 +63,41 @@ Rover.configure(
 val formatter = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
 val fromDate: Date = formatter.parse("01-01-2020") ?: Date()
 
+// 1. Create a new connection to a merchant
+// userId: [optional] identifier you provide and passed through by Rover
+// account: [optional] account name for this merchant to connect to (nil for new connection)
+// merchantId: the identifier for the merchant to connect to (passed back in configure merchants array)
+// fromDate: how far back you'd like to collect receipts
+// collectItemInfo: [optional] collect extra information about items when possible (like UPC)
+// isEphemeral: [optional] encrypt and store this connection locally to reconnect at later date
 Rover.collect(
+	userId = null,
+	account = null,
 	merchantId = MerchantId.gmail.rawValue,
 	fromDate = fromDate,
+	collectItemInfo = true,
 	isEphemeral = false,
 	delegate = ReferenceDelegate())
+
+// 2. List current merchant connections
+// connections: array of existing merchant connections
+Rover.connections { connections ->
+	
+}
+
+// 3. Recollect from an existing connection
+Rover.collect(
+	userId = null,
+	account = connection.account,
+	merchantId = MerchantId.gmail.rawValue,
+	fromDate = connection.fromDate,
+	collectItemInfo = true,
+	isEphemeral = false,
+	delegate = ReferenceDelegate())
+
+// 4. Remove a connection
+Rover.shared.remove(connection: connection) { }
+
 ```
 
 ## SDK Integration
@@ -125,4 +156,4 @@ By default, debugging in Android Studio will break on (any?) signal. [This is a 
 - add ```process handle SIGUSR1 --pass true --stop false --notify true```
 
 
-Latest version: v0.3.3
+Latest version: v0.0.0
