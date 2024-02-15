@@ -135,7 +135,7 @@ android {
 
 ### Manual AAR
 
-To embed a specific version of Rover in your Android Studio project, download the Android Archive file from the releases directory ( https://github.com/SmallPlanet/RoverAndroid/tree/main/Releases ). Place the .aar file somewhere in your project directory and then
+To embed a specific version of Rover in your Android Studio project, download the Android Archive file from the releases directory ( https://github.com/SmallPlanet/RoverAndroid/releases ). Place the .aar file somewhere in your project directory and then
 add the following:
 
 ```kotlin
@@ -156,4 +156,4 @@ By default, debugging in Android Studio will break on (any?) signal. [This is a 
 - add ```process handle SIGUSR1 --pass true --stop false --notify true```
 
 
-Latest version: v0.3.6
+Latest version: v0.3.7
