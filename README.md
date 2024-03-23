@@ -3,10 +3,19 @@
 ```kotlin
 import com.smallplanet.roverandroid.*
 
-// In a subclass of Application, provide this override for the getPackageName() method
+// Create a custom subclass of RoverApplication for you app
+class ReferenceApplication(): RoverApplication() { }
+
+// Alternatively, you can provide these two overrides manually
 class ReferenceApplication(): Application() {
     override fun getPackageName(): String? {
         return Rover.getPackageName() ?: super.getPackageName()
+    }
+    override fun getPackageManager(): PackageManager {
+        return Rover.getPackageManager(
+            super.getPackageName(),
+            super.getPackageManager()
+        ) ?: super.getPackageManager()
     }
 }
 ```
@@ -156,4 +165,4 @@ By default, debugging in Android Studio will break on (any?) signal. [This is a 
 - add ```process handle SIGUSR1 --pass true --stop false --notify true```
 
 
-Latest version: v0.3.11
+Latest version: v0.3.12
