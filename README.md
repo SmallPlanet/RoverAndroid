@@ -154,6 +154,14 @@ dependencies {
 }
 ```
 
+### Proguard
+
+If you are using Proguard in your Android app, please add the following rule:
+
+```
+-keep class com.smallplanet.** { *; }
+```
+
 ### Disable SIGUSR1 breakpoints
 
 By default, debugging in Android Studio will break on (any?) signal. [This is a well-known issue documented here](https://issuetracker.google.com/issues/240007217?pli=1). This is particularly annoying because usleep() is implemented using SIGUSR1 in the Android NDK. To work around this issue, you can make the following configuration change:
@@ -165,4 +173,4 @@ By default, debugging in Android Studio will break on (any?) signal. [This is a 
 - add ```process handle SIGUSR1 --pass true --stop false --notify true```
 
 
-Latest version: v0.3.24
+Latest version: v0.4.0
