@@ -109,6 +109,79 @@ Rover.shared.remove(connection: connection) { }
 
 ```
 
+### Background Collection
+
+To perform collections in the background (via [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager)) you need to perform the following steps.
+
+- Create a Worker class in which you will call Rover.collect() on the connections you want to collect from.
+- Schedule your Worker class for periodic work via WorkManager API
+
+```
+// Kotlin example for CoroutineWorker which will be called when it is time to process in the background
+class BackgroundCollectionWorker(val context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
+    override suspend fun doWork(): Result {
+        return Rover.scheduleBackgroundCollections(
+            {
+                // Call Rover.collect() for the connections you want to refresh here. You can use
+                // your own business logic to determine which connections are higher priority than
+                // others and schedule them first.
+                // NOTE: it is important then Rover.configure() is called before collections
+                // are scheduled.
+                Rover.configure(
+                    "MY_ROVER_LICENSE_KEY",
+                    Rover.Environment.staging,
+                    "unknown",
+                    applicationContext, 
+                    null) { merchants, error ->
+	
+                    Rover.connections { connections ->
+
+                        // Perform collections for at more one connection; that connection should:
+                        // - not be userInteractionRequired
+                        // - have the oldest collection date
+                        val distantPast = Date(Long.MIN_VALUE)
+                        val filteredConnections = connections
+                            .filter { it.userInteractionRequired == false }
+                            .sortedWith { lhs, rhs ->
+                                (lhs.attemptedDate ?: distantPast).compareTo(rhs.attemptedDate ?: distantPast)
+                            }
+                        for (connection in filteredConnections) {
+                            Log.d("Rover", "Schedule collection on ${connection.merchantId}:${connection.account}")
+                            Rover.collect(account = connection.account,
+                                merchantId = connection.merchantId,
+                                fromDate = connection.fromDate ?: Date(),
+                                isEphemeral = false,
+                                delegate = ReferenceDelegate())
+                        }
+                    }
+                }
+            },
+            { connections ->
+                // When all collections are completed this code will execute, allowing for
+                // any clean up or reporting.
+                Log.d("Rover", "Background collection finished for ${connections.size} connections")
+            }
+        )
+    }
+}
+
+// Kotlin example for scheduling your BackgroundCollectionWorker class
+// Schedule background collections via WorkManager API. A good place to call
+// this is in the callback of Rover.configure()
+val manager = WorkManager.getInstance(this.applicationContext)
+val constraints = Constraints.Builder()
+    .setRequiredNetworkType(NetworkType.CONNECTED)
+    .setRequiresBatteryNotLow(true)
+    .build()
+val request = PeriodicWorkRequestBuilder<BackgroundCollectionWorker>(24, TimeUnit.HOURS)
+    .setConstraints(constraints)
+    .build()
+manager.enqueueUniquePeriodicWork("BackgroundCollectionWorker", ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, request)
+    
+
+```
+
+
 ## SDK Integration
 
 ### Required build.gradle settings
@@ -173,4 +246,4 @@ By default, debugging in Android Studio will break on (any?) signal. [This is a 
 - add ```process handle SIGUSR1 --pass true --stop false --notify true```
 
 
-Latest version: v0.4.16
+Latest version: v0.4.20
