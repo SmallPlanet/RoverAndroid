@@ -174,9 +174,10 @@ val constraints = Constraints.Builder()
     .setRequiresBatteryNotLow(true)
     .build()
 val request = PeriodicWorkRequestBuilder<BackgroundCollectionWorker>(24, TimeUnit.HOURS)
+    .setInitialDelay(24, TimeUnit.HOURS)
     .setConstraints(constraints)
     .build()
-manager.enqueueUniquePeriodicWork("BackgroundCollectionWorker", ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, request)
+manager.enqueueUniquePeriodicWork("BackgroundCollectionWorker", ExistingPeriodicWorkPolicy.UPDATE, request)
     
 
 ```
