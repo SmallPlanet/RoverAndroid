@@ -247,4 +247,4 @@ By default, debugging in Android Studio will break on (any?) signal. [This is a 
 - add ```process handle SIGUSR1 --pass true --stop false --notify true```
 
 
-Latest version: v0.4.24
+Latest version: v0.4.25
