@@ -212,6 +212,7 @@ android {
 		pickFirst '**/libc++_shared.so'
 		doNotStrip "*/arm64-v8a/*.so"
 		doNotStrip "*/armeabi-v7a/*.so"
+        doNotStrip "*/x86_64/*.so"
 	}
 }
 ```
@@ -247,4 +248,4 @@ By default, debugging in Android Studio will break on (any?) signal. [This is a 
 - add ```process handle SIGUSR1 --pass true --stop false --notify true```
 
 
-Latest version: v0.4.27
+Latest version: v0.0.0
