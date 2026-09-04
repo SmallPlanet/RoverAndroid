@@ -18,6 +18,10 @@ class ReferenceApplication(): Application() {
         ) ?: super.getPackageManager()
     }
 }
+
+// If you call Rover.configure() late in your app startup process
+// then it is advisable to add a call to Rover.primePackageManager()
+// as early as possible.
 ```
 
 ```kotlin
@@ -223,9 +227,12 @@ To embed a specific version of Rover in your Android Studio project, download th
 add the following:
 
 ```kotlin
-// Add the following dependency to your build.gradle. Make sure to update the path correctly to your downloaded .aar file.
 dependencies {
+	// Add the following dependency to your build.gradle. Make sure to update the path correctly to your downloaded .aar file.
 	implementation files('./path/to/downloaded/RoverAndroid.aar')
+	
+	// Rover supports features added in 1.14.0 and above; please ensure you specify at least this version of androidx.webkit
+	implementation 'androidx.webkit:webkit:1.14.0'
 }
 ```
 
@@ -248,4 +255,4 @@ By default, debugging in Android Studio will break on (any?) signal. [This is a 
 - add ```process handle SIGUSR1 --pass true --stop false --notify true```
 
 
-Latest version: v0.4.40
+Latest version: v0.4.56
